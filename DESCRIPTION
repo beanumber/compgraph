@@ -1,0 +1,18 @@
+Package: compgraph
+Type: Package
+Title: Library for Composite Graphs
+Version: 0.1-1
+Date: 2013-01-07
+Author: Ben Baumer <bbaumer@smith.edu>
+Maintainer: Ben Baumer <bbaumer@smith.edu>
+Description: More about what it does (maybe more than one line)
+License: What license is it under?
+Imports:
+    igraph
+Collate:
+    'compgraph.R'
+    'cstretch.R'
+    'cbtime.R'
+    'ercg.R'
+    'plot.R'
+    'citinerary.R'
