@@ -34,9 +34,19 @@ compgraph.default = function (g1, g2, name = "G", ...) {
   # Make sure both graph arguments are actually graphs
   if (!is.igraph(g1)) { cat("g1 is not a valid igraph object"); break; }
   if (!is.igraph(g2)) { cat("g2 is not a valid igraph object"); break; }
+  
+  # Create a bipartite graph for the mapping
+  R.V = c(rep(0, vcount(g1)), rep(1, vcount(g2)))
+  g1.vIds = resample(vcount(g1), size = vcount(g1) * vcount(g2))
+  g2.vIds = resample(vcount(g2), size = vcount(g1) * vcount(g2))
+  R.E = as.vector(t(unique(cbind(g1.vIds, g2.vIds + vcount(g1)))))
+  R = graph.bipartite(R.V, R.E)
+  V(R)$g1.vId = c(1:vcount(g1), rep(NA, vcount(g2)))
+  V(R)$g2.vId = c(rep(NA, vcount(g1)), 1:vcount(g2))
+  
   G = list("name" = name
       , "g1" = g1, "g2" = g2
-      , "R" = as.vector(V(g1))		#	Right now we can only handle 1-1 mappings
+      , "R" = R
       , "D1.geodesic" = shortest.paths(g1)
       , "D2.geodesic" = shortest.paths(g2)
       , "T" = minimum.spanning.tree(g1))
@@ -46,8 +56,8 @@ compgraph.default = function (g1, g2, name = "G", ...) {
 #  G$stretch = getAllPathStretch(G)
 #  G$ccd = max(G$stretch$cstretch)
   if (is.connected(g1) & is.connected(g2)) {
-    G$cbtime = cbtime(G)
-    G$cbtime.max = max(G$cbtime$cstretch)
+#    G$cbtime = cbtime(G)
+#    G$cbtime.max = max(G$cbtime$cstretch)
   } else {
     cat("\nOne of the graphs is not connected, so the broadcast time is infinite")
     G$cbtime = Inf
@@ -67,8 +77,8 @@ summary.compgraph = function (G) {
    cat("G2: \n")
    summary(G$g2)
    if (is.connected(G$g2)) { cat("G2 is connected\n") } else { cat("G2 is NOT connected\n") } 
-   cat("R dimensions: \n")
-   print(dim(G$R))
+   cat("R: \n")
+   summary(G$R)
    cat("G1 Geodesic Distance Matrix: \n")
    print(summary(as.vector(G$D1.geodesic)))
    cat("G2 Geodesic Distance Matrix: \n")

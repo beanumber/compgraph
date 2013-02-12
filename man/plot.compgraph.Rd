@@ -2,7 +2,8 @@
 \alias{plot.compgraph}
 \title{plot.compgraph}
 \usage{
-  plot.compgraph(G, hilite.cbtime = TRUE, ...)
+  plot.compgraph(G, hilite.cbtime = FALSE,
+    suppress.vertex.labels = FALSE, ...)
 }
 \arguments{
   \item{G}{A composite graph object}
