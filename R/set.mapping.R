@@ -19,7 +19,7 @@
 #' is.solvable(G, 3)
 #' 
 #' 
-set.mapping = function (G, type = "random", ...) {
+set.mapping = function (G, type = "random", r=0.5, ...) {
   # Create a bipartite graph for the mapping
   n1 = vcount(G$g1)
   n2 = vcount(G$g2)
@@ -27,9 +27,15 @@ set.mapping = function (G, type = "random", ...) {
   
   # Now determine the edges in some way
   if (type == "random") {
-    g1.vIds = resample(n1, size = n1 + n2)
-    g2.vIds = resample(n2, size = n1 + n2)
-    R.E = as.vector(t(unique(cbind(g1.vIds, g2.vIds + n1))))
+    if(!is.null(r) && 0 <= r && r <= 1) {
+    } else {
+      r = 0.5
+      #      r = log(n1 + n2) / (n1 * n2)
+    }
+    possible.edges = expand.grid(vId = 1:n1, wId = (n1+1):(n1 + n2))
+    edges = sample(possible.edges, size = n1 * n2 * r)
+    R.E = as.vector(t(edges[,c("vId", "wId")]))
+    #    R.E = as.vector(t(unique(cbind(g1.vIds, g2.vIds + n1))))
     R = graph.bipartite(R.V, R.E)
   }
   if (type == "one-to-one") {

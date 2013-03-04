@@ -43,45 +43,45 @@ ccgplot = function (ccg, ...) {
   E(g2)$width = 1 - (ecount(g2) / choose(vcount(g2), 2))
   E(R)$color = "lightgrey"
   E(R)$width = 1 - (ecount(R) / choose(vcount(R), 2))
-
+  
   # Set the layout
   if(!is.null(g1$layout)) { g1.layout = g1$layout } else { g1.layout = layout.kamada.kawai(g1) }
   if(!is.null(g2$layout)) { g2.layout = g2$layout } else { g2.layout = layout.fruchterman.reingold(g2) }
   
   # Is the CCNet completed?
   if (is.completed(ccg)) { 
-    clab = "Alls Tasks are Completed" 
+    clab = "\nAlls Tasks are Completed" 
   } else { 
-    clab = "Alls Tasks are Not Completed" 
+    clab = "\nAlls Tasks are Not Completed" 
   }
   
   # Make the plot
   par(mfrow=c(1,3))
   
   plot(g1, main=paste("G1 (Social Network)", g1$name)
-#       , vertex.label.cex = V(g1)$size / max(V(g1)$size)
+       #       , vertex.label.cex = V(g1)$size / max(V(g1)$size)
        , vertex.label.family = "serif"
        , layout=g1.layout, edge.curved=TRUE
        , xlab = paste("|V| =", vcount(g1), ", |E| =", ecount(g1), ", Edge Density =", round(edensity.g1, 3))
-#       , xlab = paste(xlab.rad, ", Diameter =", diameter(g2), ", Broadcast Time =", G$cbtime.max )
+       #       , xlab = paste(xlab.rad, ", Diameter =", diameter(g2), ", Broadcast Time =", G$cbtime.max )
        , ...
   )
   
   plot(R, main="R (Mapping)"
-#       , vertex.label.cex = V(g1)$size / max(V(g1)$size)
+       #       , vertex.label.cex = V(g1)$size / max(V(g1)$size)
        , vertex.label.family = "serif"
        , layout=layout.bipartite(R), edge.curved=TRUE
-       , xlab = clab
+       , xlab = paste("Edge Density =", round(ecount(R) / prod(table(V(g$R)$type)), 3), clab)
   )
   
   plot(g2, main=paste("G2 (Task Graph)", g2$name)
-#       , vertex.label.cex = V(g2)$size / max(V(g2)$size)
+       #       , vertex.label.cex = V(g2)$size / max(V(g2)$size)
        , vertex.label.family = "serif"
        , edge.arrow.size = 0.1
        , layout=g2.layout, edge.curved=TRUE
        , xlab = paste("|V| =", vcount(g2), ", |E| =", ecount(g2), ", Diameter =", diameter(g2))
-#    , xlab = paste("Diameter =", diameter(g2), ", Broadcast Time =", G$cbtime.max )
-    , ...
+       #    , xlab = paste("Diameter =", diameter(g2), ", Broadcast Time =", G$cbtime.max )
+       , ...
   )
   
   par(mfrow=c(1,1))
@@ -98,5 +98,4 @@ layout.bipartite = function (g) {
     return(cbind(x,y))
   }
 }
-
 

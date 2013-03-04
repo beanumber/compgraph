@@ -27,72 +27,69 @@
 #' 
 #' 
 #' 
-compgraph = function (g1, g2, ...) UseMethod("compgraph")
+compgraph = function (g1, g2, name = "G", ...) UseMethod("compgraph")
 
 compgraph.default = function (g1, g2, name = "G", ...) {
   require(igraph)
+  require(mosaic)
   # Make sure both graph arguments are actually graphs
   if (!is.igraph(g1)) { cat("g1 is not a valid igraph object"); break; }
   if (!is.igraph(g2)) { cat("g2 is not a valid igraph object"); break; }
   
-  # Create a bipartite graph for the mapping
-  R.V = c(rep(0, vcount(g1)), rep(1, vcount(g2)))
-  g1.vIds = resample(vcount(g1), size = vcount(g1) * vcount(g2))
-  g2.vIds = resample(vcount(g2), size = vcount(g1) * vcount(g2))
-  R.E = as.vector(t(unique(cbind(g1.vIds, g2.vIds + vcount(g1)))))
-  R = graph.bipartite(R.V, R.E)
-  V(R)$g1.vId = c(1:vcount(g1), rep(NA, vcount(g2)))
-  V(R)$g2.vId = c(rep(NA, vcount(g1)), 1:vcount(g2))
-  
   G = list("name" = name
-      , "g1" = g1, "g2" = g2
-      , "R" = R
-      , "D1.geodesic" = shortest.paths(g1)
-      , "D2.geodesic" = shortest.paths(g2)
-      , "T" = minimum.spanning.tree(g1))
+           , "g1" = g1, "g2" = g2
+           , "D1.geodesic" = shortest.paths(g1)
+           , "D2.geodesic" = shortest.paths(g2)
+           , "T" = minimum.spanning.tree(g1))
   class(G) = "compgraph"
+  #  args = list(...)
+  #  cat(str(args))
+  G = set.mapping(G, ...)
   G$f.D2.geodesic = t(apply(G$D2.geodesic, 1, sort))
-#  G$g1.paths = getAllPaths(G, fromNodeIndex = g1.root.index)
-#  G$stretch = getAllPathStretch(G)
-#  G$ccd = max(G$stretch$cstretch)
+  #  G$g1.paths = getAllPaths(G, fromNodeIndex = g1.root.index)
+  #  G$stretch = getAllPathStretch(G)
+  #  G$ccd = max(G$stretch$cstretch)
   if (is.connected(g1) & is.connected(g2)) {
-#    G$cbtime = cbtime(G)
-#    G$cbtime.max = max(G$cbtime$cstretch)
+    #    G$cbtime = cbtime(G)
+    #    G$cbtime.max = max(G$cbtime$cstretch)
   } else {
     cat("\nOne of the graphs is not connected, so the broadcast time is infinite")
     G$cbtime = Inf
     G$cbtime.max = Inf
   }
-#  G$mean.link.stretch = getMeanLinkStretch(G)
+  #  G$mean.link.stretch = getMeanLinkStretch(G)
   return(G)
 }
+
+
+
 
 #' @title summary
 
 summary.compgraph = function (G) {
-   cat(paste("Composite Graph: ", G$name, "\n"))
-   cat("G1: \n")
-   summary(G$g1)
-   if (is.connected(G$g1)) { cat("G1 is connected\n") } else { cat("G1 is NOT connected\n") } 
-   cat("G2: \n")
-   summary(G$g2)
-   if (is.connected(G$g2)) { cat("G2 is connected\n") } else { cat("G2 is NOT connected\n") } 
-   cat("R: \n")
-   summary(G$R)
-   cat("G1 Geodesic Distance Matrix: \n")
-   print(summary(as.vector(G$D1.geodesic)))
-   cat("G2 Geodesic Distance Matrix: \n")
-   print(summary(as.vector(G$D2.geodesic)))
- #  cat("Path Stretch Summary: \n")
- #  print(summary(G$stretch))
- #  cat("Mean Link Stretch: ")
- #  print(G$mean.link.stretch)
- #  cat("\nCCD: ")
- #  print(G$ccd)
-   cat("\nBroadcast Time: ")
-   print(G$cbtime.max)
+  cat(paste("Composite Graph: ", G$name, "\n"))
+  cat("G1: \n")
+  summary(G$g1)
+  if (is.connected(G$g1)) { cat("G1 is connected\n") } else { cat("G1 is NOT connected\n") } 
+  cat("G2: \n")
+  summary(G$g2)
+  if (is.connected(G$g2)) { cat("G2 is connected\n") } else { cat("G2 is NOT connected\n") } 
+  cat("R: \n")
+  summary(G$R)
+  cat("G1 Geodesic Distance Matrix: \n")
+  print(summary(as.vector(G$D1.geodesic)))
+  cat("G2 Geodesic Distance Matrix: \n")
+  print(summary(as.vector(G$D2.geodesic)))
+  #  cat("Path Stretch Summary: \n")
+  #  print(summary(G$stretch))
+  #  cat("Mean Link Stretch: ")
+  #  print(G$mean.link.stretch)
+  #  cat("\nCCD: ")
+  #  print(G$ccd)
+  cat("\nBroadcast Time: ")
+  print(G$cbtime.max)
 }
- 
+
 # stats = function (G) {
 #   return(c("g2.euclidean.mean" = mean(G$g2$D.euclidean)
 #            , "g2.geodesic.mean" = mean(G$D2.geodesic)
@@ -114,7 +111,7 @@ summary.compgraph = function (G) {
 # 
 # #getAllPaths = function (G, fromNodeIndex = 0, graph = "g1") {
 # #  if(graph == "g2") { g = G$g2 } else { g = G$g1 }
-# #  return(as.vector(get.shortest.paths(g, from=fromNodeIndex)))		# A list of all paths from the root node to every other node
+# #  return(as.vector(get.shortest.paths(g, from=fromNodeIndex)))  	# A list of all paths from the root node to every other node
 # #}
 # 
 # 

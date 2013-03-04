@@ -34,7 +34,7 @@ getG1PathLongestCStretch = function (G) {
 #' plot(ercg(20, 0.5))
 
 plot.compgraph = function (G, hilite.cbtime = FALSE, suppress.vertex.labels=FALSE, ...) {
-
+  
   g1 = G$g1
   g2 = G$g2
   
@@ -81,7 +81,7 @@ plot.compgraph = function (G, hilite.cbtime = FALSE, suppress.vertex.labels=FALS
   }
   
   # Make the plot
-  par(mfrow=c(1,2))
+  par(mfrow=c(1,3))
   
   plot(g1, main=paste("G1:", g1$name)
        , vertex.label.cex = V(g1)$size / max(V(g1)$size)
@@ -89,8 +89,15 @@ plot.compgraph = function (G, hilite.cbtime = FALSE, suppress.vertex.labels=FALS
        , edge.arrow.size = 0.5, edge.label.family = "Palatino"
        , layout=g1.layout, edge.curved=TRUE
        , xlab = paste("|V| =", vcount(g1), ", |E| =", ecount(g1), ", Diameter =", diameter(g1))
-#       , xlab = paste(xlab.rad, ", Diameter =", diameter(g2), ", Broadcast Time =", G$cbtime.max )
+       #       , xlab = paste(xlab.rad, ", Diameter =", diameter(g2), ", Broadcast Time =", G$cbtime.max )
        , ...
+  )
+  
+  plot(G$R, main="R"
+       , vertex.label.cex = V(g1)$size / max(V(g1)$size)
+       , vertex.label.family = "serif"
+       , edge.arrow.size = 0.5, edge.label.family = "Palatino"
+       , layout=layout.bipartite(G$R), edge.curved=TRUE
   )
   
   plot(g2, main=paste("G2:", g2$name)
@@ -99,13 +106,12 @@ plot.compgraph = function (G, hilite.cbtime = FALSE, suppress.vertex.labels=FALS
        , edge.arrow.size = 0.5, edge.label.family = "Palatino"
        , layout=g2.layout, edge.curved=TRUE
        , xlab = paste("|V| =", vcount(g2), ", |E| =", ecount(g2), ", Diameter =", diameter(g2))
-#    , xlab = paste("Diameter =", diameter(g2), ", Broadcast Time =", G$cbtime.max )
-    , ...
+       #    , xlab = paste("Diameter =", diameter(g2), ", Broadcast Time =", G$cbtime.max )
+       , ...
   )
   
   par(mfrow=c(1,1))
 }
-
 
 
 plot.T = function (G, ...) {
@@ -118,12 +124,12 @@ plot.T = function (G, ...) {
   # Set edge attributes
   E(T)$color = "lightgrey"
   E(T)$width = 1
-
+  
   plot(T, main=paste("G1:", G$g1$name)
-    , vertex.label.cex = V(T)$size / max(V(T)$size)
-    , edge.arrow.size = 0.2, layout=layout.reingold.tilford
-    , xlab = paste("Number of Nodes =", length(V(T)), ", Diameter =", diameter(T))
-    , ...
+       , vertex.label.cex = V(T)$size / max(V(T)$size)
+       , edge.arrow.size = 0.2, layout=layout.reingold.tilford
+       , xlab = paste("Number of Nodes =", length(V(T)), ", Diameter =", diameter(T))
+       , ...
   )
 }
 
