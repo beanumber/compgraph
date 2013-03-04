@@ -19,15 +19,15 @@
 #' is.solvable(G, 3)
 #' 
 #' 
-is.completed = function (G, wId = 3, ...) {
-  if (!is.solvable(G, wId)) {
+is.completed = function (ccg, wId = 1, ...) {
+  if (!is.solvable(ccg, wId)) {
     return(FALSE)
   } else {
-    children = neighbors(G$g2, wId)
+    children = neighbors(ccg$g2, wId)
     if (length(children) == 0) {
       return(TRUE)
     } else {
-      return(prod(sapply(children, is.completed, G=G)))
+      return(prod(sapply(children, is.completed, ccg=ccg)))
     }
   }
 }

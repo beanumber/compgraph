@@ -21,6 +21,7 @@
 #' 
 #' 
 ccg.game = function (n1, p1, n2 = n1, ...) {
+  # Check for valid entries for the probability of an edge
   if(p1 <= 0 | p1 > 1) { 
     p1 = 1/n1
     p2 = p1
@@ -29,7 +30,11 @@ ccg.game = function (n1, p1, n2 = n1, ...) {
     # Draw the researcher's expertise from an exponential distribution
     # with mean 2
     V(g1)$expertise = rexp(vcount(g1), rate=1/2)
-    g2 = graph.tree(n2, 2)   # a regular binary tree
+    if (n2 == 1) {
+      g2 = graph.empty(1)   # a single node
+    } else {
+      g2 = graph.tree(n2, 2)   # a regular binary tree
+    }
     # Draw the difficulty from an exponential distribution as well
     V(g2)$difficulty = rexp(vcount(g2), rate=1/2)  
     return(compgraph(g1, g2, ...)) 

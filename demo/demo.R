@@ -39,17 +39,23 @@ is.completed(g, 1)
 
 ##############################################################
 
+# With no restrictions, tasks are independent
+# so consider only a single task
+
+ccg = ccg.game(n1=10, p1=0.2, n2=1, r=0.1)
+ccgplot(ccg)
+
 # Sweep of parameter space
 n = 100
 p = 0.1
 r = 0.1
 numTrials = 20
-ds = do(numTrials) * is.completed(ccg.game(n, p, r=r))
+ds = do(numTrials) * is.completed(ccg.game(n1=n, p1=p, n2=1, r=r))
 sum(ds$result)
 
 # More carefully
 test = function(n, p, r) {
-  ccg = ccg.game(n, p, r=r)
+  ccg = ccg.game(n1=n, p, n2 = 1, r=r)
   return(c(n = n, p = p, r = r
            , social.density = ecount(ccg$g1) / choose(vcount(ccg$g1), 2)
            , mapping.density = ecount(ccg$R) / (vcount(ccg$g1) * vcount(ccg$g2))

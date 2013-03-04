@@ -19,7 +19,7 @@
 #' is.solvable(G, 3)
 #' 
 #' 
-is.solvable = function (ccg, wId = 3, ...) {
+is.solvable = function (ccg, wId = 1, ...) {
   difficulty = V(ccg$g2)$difficulty[wId]
   g.s = assigned(ccg, wId)
   if (collaboration(g.s) >= difficulty) { 

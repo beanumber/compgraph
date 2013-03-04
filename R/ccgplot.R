@@ -28,7 +28,7 @@ ccgplot = function (ccg, ...) {
   V(g1)$label = paste("v", 1:vcount(g1), sep="")
   
   V(g2)$size = 5 * V(g2)$difficulty
-  V(g2)$color = palette[eccentricity(g2)]
+  V(g2)$color = palette[eccentricity(g2) + 1]
   V(g2)$label = paste("w", 1:vcount(g2), sep="")
   
   V(R)$size = c(V(g1)$size, V(g2)$size)
@@ -71,7 +71,7 @@ ccgplot = function (ccg, ...) {
        #       , vertex.label.cex = V(g1)$size / max(V(g1)$size)
        , vertex.label.family = "serif"
        , layout=layout.bipartite(R), edge.curved=TRUE
-       , xlab = paste("Edge Density =", round(ecount(R) / prod(table(V(g$R)$type)), 3), clab)
+       , xlab = paste("Edge Density =", round(ecount(R) / prod(table(V(R)$type)), 3), clab)
   )
   
   plot(g2, main=paste("G2 (Task Graph)", g2$name)
