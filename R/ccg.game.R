@@ -29,14 +29,16 @@ ccg.game = function (n1, p1, n2 = n1, ...) {
     g1 = erdos.renyi.game(n1, p1)
     # Draw the researcher's expertise from an exponential distribution
     # with mean 2
-    V(g1)$expertise = rexp(vcount(g1), rate=1/2)
+    lambda.s = 1/2
+    V(g1)$expertise = rexp(vcount(g1), rate=lambda.s)
     if (n2 == 1) {
       g2 = graph.empty(1)   # a single node
     } else {
       g2 = graph.tree(n2, 2)   # a regular binary tree
     }
     # Draw the difficulty from an exponential distribution as well
-    V(g2)$difficulty = rexp(vcount(g2), rate=1/2)  
+    # Set lambda.t = lambda.s / n.s
+    V(g2)$difficulty = rexp(vcount(g2), rate=lambda.s / vcount(g1))  
     return(compgraph(g1, g2, ...)) 
   }
 }
