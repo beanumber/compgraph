@@ -19,3 +19,6 @@ Collate:
     'collaboration.R'
     'is.completed.R'
     'is.solvable.R'
+    'ccgplot.R'
+    'is.ccg.R'
+    'set.mapping.R'

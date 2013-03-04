@@ -2,7 +2,7 @@
 \alias{compgraph}
 \title{compgraph}
 \usage{
-  compgraph(g1, g2, ...)
+  compgraph(g1, g2, name = "G", ...)
 }
 \arguments{
   \item{g1}{An igraph object}
