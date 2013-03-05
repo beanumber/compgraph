@@ -2,7 +2,7 @@
 \alias{is.solvable}
 \title{is.solvable}
 \usage{
-  is.solvable(ccg, wId = 3, ...)
+  is.solvable(ccg, wId = 1, ...)
 }
 \arguments{
   \item{ccg}{collaborative composite graph}

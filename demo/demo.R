@@ -5,6 +5,7 @@
 
 require(igraph)
 require(mosaic)
+trellis.par.set(theme = col.mosaic())
 n = 20
 p = 1/2
 g1 = erdos.renyi.game(n, p)
@@ -46,7 +47,7 @@ ccg = ccg.game(n1=10, p1=0.2, n2=1, r=0.5)
 ccgplot(ccg)
 
 # Sweep of parameter space
-n = 100
+n = 200
 p = 0.9
 r = 0.1
 numTrials = 20
@@ -54,25 +55,58 @@ ds = do(numTrials) * is.completed(ccg.game(n1=n, p1=p, n2=1, r=r))
 sum(ds$result)
 
 # More carefully
-test = function(n, p, r) {
-  ccg = ccg.game(n1=n, p1=p, n2 = 1, r=r)
-  return(c(n1 = n, p1 = p, r = r
+test = function(n_s, p_s, n_t, r) {
+  ccg = ccg.game(n1=n_s, p1=p_s, n2 = n_t, r=r)
+  return(c(n_s = n_s, p_s = p_s, n_t = n_t, r = r
            , social.density = ecount(ccg$g1) / choose(vcount(ccg$g1), 2)
            , mapping.density = ecount(ccg$R) / (vcount(ccg$g1) * vcount(ccg$g2))
            , is.completed = is.completed(ccg)))
 }
 
-test.many = function (n, p, r, numTrials) {
-  return(do(numTrials) * test(n,p, r))
+test.many = function (n_s, p_s, n_t = 1, r, numTrials) {
+  return(do(numTrials) * test(n_s, p_s, n_t, r))
 }
-test.many(n,p, r, numTrials)
+test.many(n,p, 1, r, numTrials)
 
 # Try all the r's
-rs = seq(from=0.1, to=1, by=0.05)
-res.mat = do.call("rbind", sapply(rs, test.many, n=n, p=p, numTrials=numTrials))
-dim(res.mat) = c(6, length(rs) * numTrials)
-res = data.frame(t(res.mat))
-names(res) = c("n", "p", "r", "social.density", "mapping.density", "is.completed")
+n = 100
 
-xyplot(jitter(is.completed) ~ r, data=res, alpha=0.3, pch=19, type=c("p", "smooth"))
+test.sweep = function (n_s, n_t = 1, numTrials, granularity = 0.1, warn=TRUE) {
+  if (!(granularity > 0 & granularity < 0.2)) {
+    granularity = 0.1
+  }
+  ps = seq(from=granularity, to=1, by=granularity)
+  rs = seq(from=granularity, to=1, by=granularity)
+  pairs = expand.grid(p_s = ps, r = rs)
+  N = length(rs) * length(ps) * numTrials
+  cat(paste("\nComputing a total of", N, "trials!"))
+  if (warn) {
+    # randomly sample some of the items you are going to compute
+    # and then benchmark the time for all the trials
+    samp.size = 100
+    samp.pairs = sample(pairs, size = samp.size)  
+    benchmark = system.time(do.call("rbind", mapply(FUN=test.many, samp.pairs$p_s, samp.pairs$r
+               , MoreArgs=list(n_s=n_s, n_t = n_t, numTrials=1))))
+    exp.time = (benchmark["elapsed"] / samp.size) * N
+    cat(paste("\nThis should take about", round( exp.time / 60, 2), "minutes"))
+  }
+  res.mat = do.call("rbind", mapply(FUN=test.many, pairs$p_s, pairs$r
+            , MoreArgs=list(n_s=n_s, n_t = n_t, numTrials=numTrials)))
+#  res.mat = do.call("rbind", sapply(rs, test.many, n_s=n_s, p_s=p_s, n_t = n_t, numTrials=numTrials))
+  dim(res.mat) = c(7, length(rs) * length(ps) * numTrials)
+  res = data.frame(t(res.mat))
+  names(res) = c("n_s", "p_s", "n_t", "r", "social.density", "mapping.density", "is.completed")
+  return(res)
+}
+
+res = test.sweep (n_s = n, numTrials = 100)
+
+# Plot the results
+xyplot(jitter(is.completed) ~ jitter(r), groups=p_s, data=res
+       , alpha=0.5, type=c("p", "smooth"), lwd=3
+       , auto.key=list(columns=5), xlab="Density of Mapping (%)"
+       , ylab = "Probability that the Task is Completed"
+       , sub = paste("Numnber of Trials =", nrow(res), "| Number of Researchers =", max(res$n_s), "| Number of Tasks =", max(res$n_t)))
 favstats(is.completed ~ r, data=res)
+# plotFun(x ~ x, add=TRUE)
+# plotFun(x^(1/10) ~ x, add=TRUE)

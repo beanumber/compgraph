@@ -38,7 +38,7 @@ ccg.game = function (n1, p1, n2 = n1, ...) {
     }
     # Draw the difficulty from an exponential distribution as well
     # Set lambda.t = lambda.s / n.s
-    V(g2)$difficulty = rexp(vcount(g2), rate=lambda.s / vcount(g1))  
+    V(g2)$difficulty = rexp(vcount(g2), rate= (1 + p1) * lambda.s / vcount(g1))  
     return(compgraph(g1, g2, ...)) 
   }
 }

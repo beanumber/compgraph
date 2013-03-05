@@ -2,7 +2,7 @@
 \alias{is.completed}
 \title{is.completed}
 \usage{
-  is.completed(G, wId = 3, ...)
+  is.completed(ccg, wId = 1, ...)
 }
 \arguments{
   \item{ccg}{collaborative composite graph}
