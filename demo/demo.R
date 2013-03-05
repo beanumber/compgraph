@@ -108,5 +108,5 @@ xyplot(jitter(is.completed) ~ jitter(r), groups=p_s, data=res
        , ylab = "Probability that the Task is Completed"
        , sub = paste("Numnber of Trials =", nrow(res), "| Number of Researchers =", max(res$n_s), "| Number of Tasks =", max(res$n_t)))
 favstats(is.completed ~ r, data=res)
-# plotFun(x ~ x, add=TRUE)
+# plotFun((1 + 0.2) * x ~ x, add=TRUE)
 # plotFun(x^(1/10) ~ x, add=TRUE)
