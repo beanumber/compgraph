@@ -20,7 +20,7 @@
 #' G = ccg.game(n, p)
 #' 
 #' 
-ccg.game = function (n1, p1, n2 = n1, ...) {
+ccg.game = function (n1, p1, n2 = n1, r = 0.5, ...) {
   # Check for valid entries for the probability of an edge
   if(p1 <= 0 | p1 > 1) { 
     p1 = 1/n1
@@ -37,8 +37,8 @@ ccg.game = function (n1, p1, n2 = n1, ...) {
       g2 = graph.tree(n2, 2)   # a regular binary tree
     }
     # Draw the difficulty from an exponential distribution as well
-    # Set lambda.t = lambda.s / n.s
-    V(g2)$difficulty = rexp(vcount(g2), rate = (lambda.s / ((1 + p1) * vcount(g1))))  
-    return(compgraph(g1, g2, ...)) 
+    # Set lambda.t = lambda.s / (r * n.s * (1-p.s))
+    V(g2)$difficulty = rexp(vcount(g2), rate = (lambda.s / ((1 + p1) * r * vcount(g1))))  
+    return(compgraph(g1, g2, r=r, ...)) 
   }
 }

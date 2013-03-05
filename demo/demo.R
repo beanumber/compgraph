@@ -43,7 +43,7 @@ is.completed(g, 1)
 # With no restrictions, tasks are independent
 # so consider only a single task
 
-ccg = ccg.game(n1=10, p1=0.2, n2=1, r=0.5)
+ccg = ccg.game(n1=10, p1=0.2, n2=1, r=0.9)
 ccgplot(ccg)
 
 # Sweep of parameter space
@@ -58,8 +58,10 @@ sum(ds$result)
 test = function(n_s, p_s, n_t, r) {
   ccg = ccg.game(n1=n_s, p1=p_s, n2 = n_t, r=r)
   return(c(n_s = n_s, p_s = p_s, n_t = n_t, r = r
+           , collective.expertise = collaboration(ccg$g1)
            , social.density = ecount(ccg$g1) / choose(vcount(ccg$g1), 2)
            , mapping.density = ecount(ccg$R) / (vcount(ccg$g1) * vcount(ccg$g2))
+           , max.task.difficulty = max(V(ccg$g2)$difficulty)
            , is.completed = is.completed(ccg)))
 }
 
@@ -93,9 +95,10 @@ test.sweep = function (n_s, n_t = 1, numTrials, granularity = 0.1, warn=TRUE) {
   res.mat = do.call("rbind", mapply(FUN=test.many, pairs$p_s, pairs$r
             , MoreArgs=list(n_s=n_s, n_t = n_t, numTrials=numTrials)))
 #  res.mat = do.call("rbind", sapply(rs, test.many, n_s=n_s, p_s=p_s, n_t = n_t, numTrials=numTrials))
-  dim(res.mat) = c(7, length(rs) * length(ps) * numTrials)
+  dim(res.mat) = c(9, length(rs) * length(ps) * numTrials)
   res = data.frame(t(res.mat))
-  names(res) = c("n_s", "p_s", "n_t", "r", "social.density", "mapping.density", "is.completed")
+  names(res) = c("n_s", "p_s", "n_t", "r", "collective.expertise"
+                 , "social.density", "mapping.density", "max.task.difficulty", "is.completed")
   return(res)
 }
 
@@ -110,3 +113,23 @@ xyplot(jitter(is.completed) ~ jitter(r), groups=p_s, data=res
 favstats(is.completed ~ r, data=res)
 # plotFun((1 + 0.2) * x ~ x, add=TRUE)
 # plotFun(x^(1/10) ~ x, add=TRUE)
+
+# Note that collective expertise is approximately normally distributed
+densityplot(~collective.expertise, data=res)
+favstats(~collective.expertise | p_s, data=res)
+# Compute the expected collective expertise
+# Note that lambda_s = 2
+res = transform(res, exS = r * n_s * (1 + p_s) * 2)
+xyplot(collective.expertise ~ exS, data=res, type=c("p", "smooth"))
+
+# Confirm the difficulty is exponential
+favstats(~max.task.difficulty, data=res)
+densityplot(~max.task.difficulty, data=res)
+
+# Fit a linear model
+fm = lm(is.completed ~ r + p_s, data=res)
+summary(fm)
+
+# Fit a logistic model
+fm2 = glm(is.completed ~ r + p_s, data=res, family=binomial)
+summary(fm2)

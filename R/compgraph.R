@@ -42,8 +42,8 @@ compgraph.default = function (g1, g2, name = "G", ...) {
            , "D2.geodesic" = shortest.paths(g2)
            , "T" = minimum.spanning.tree(g1))
   class(G) = "compgraph"
-  #  args = list(...)
-  #  cat(str(args))
+#  args = list(...)
+#  cat(str(args))
   G = set.mapping(G, ...)
   G$f.D2.geodesic = t(apply(G$D2.geodesic, 1, sort))
   #  G$g1.paths = getAllPaths(G, fromNodeIndex = g1.root.index)
