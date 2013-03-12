@@ -19,5 +19,11 @@
 #' 
 #' 
 collaboration = function (g, ...) {
-  return(sum(V(g)$expertise) * (1 + ecount(g) / ((vcount(g) * vcount(g) - 1) / 2)))
+  if (vcount(g) == 0) {
+    return(0)
+  } else if (vcount(g) == 1) {
+    return(V(g)$expertise)
+  } else {
+    return(sum(V(g)$expertise) * (1 + ecount(g) / choose(vcount(g), 2)))
+  }
 }

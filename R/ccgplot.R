@@ -19,12 +19,12 @@ ccgplot = function (ccg, ...) {
   R = ccg$R
   
   
-  numColors = max(c(degree(g1), degree(g2)))
+  numColors = max(c(degree(g1) + 1, degree(g2) + 1))
   palette = rainbow(numColors)
   
   # Set vertex attributes
   V(g1)$size = 5 * V(g1)$expertise
-  V(g1)$color = palette[degree(g1)]
+  V(g1)$color = palette[degree(g1) + 1]
   V(g1)$label = paste("v", 1:vcount(g1), sep="")
   
   V(g2)$size = 5 * V(g2)$difficulty

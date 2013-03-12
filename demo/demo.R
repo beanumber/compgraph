@@ -46,6 +46,20 @@ is.completed(g, 1)
 ccg = ccg.game(n1=10, p1=0.2, n2=1, r=0.9)
 ccgplot(ccg)
 
+##############################################################
+
+require(manipulate)
+manipulate(ccgplot(ccg.game(n1 = n_s, p1 = p_s, n2 = n_t, r = r))
+           , n_s = slider(1, 100, initial=25, label="Number of Researchers")
+           , p_s = slider(0, 1, initial=0.25, label="Probability of Social Edge")
+           , r = slider(0,1, initial=0.5, label="Assignment Percentage")
+           , n_t = slider(1, 100, initial=1, label="Number of Tasks")
+)
+
+
+
+##############################################################
+
 # Sweep of parameter space
 n = 200
 p = 0.9
@@ -102,7 +116,7 @@ test.sweep = function (n_s, n_t = 1, numTrials, granularity = 0.1, warn=TRUE) {
   return(res)
 }
 
-res = test.sweep (n_s = n, numTrials = 100)
+res = test.sweep (n_s = n, numTrials = 20)
 
 # Plot the results
 xyplot(jitter(is.completed) ~ jitter(r), groups=p_s, data=res
@@ -115,12 +129,12 @@ favstats(is.completed ~ r, data=res)
 # plotFun(x^(1/10) ~ x, add=TRUE)
 
 # Note that collective expertise is approximately normally distributed
-densityplot(~collective.expertise, data=res)
-favstats(~collective.expertise | p_s, data=res)
+densityplot(~ r * collective.expertise, data=res)
+favstats(~ r * collective.expertise | p_s, data=res)
 # Compute the expected collective expertise
 # Note that lambda_s = 2
 res = transform(res, exS = r * n_s * (1 + p_s) * 2)
-xyplot(collective.expertise ~ exS, data=res, type=c("p", "smooth"))
+xyplot(r * collective.expertise ~ exS, groups=p_s, data=res, type=c("p", "r"))
 
 # Confirm the difficulty is exponential
 favstats(~max.task.difficulty, data=res)

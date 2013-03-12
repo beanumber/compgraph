@@ -52,7 +52,7 @@ is.solvable = function (ccg, wId = 1, ...) {
 #' 
 #' 
 
-assigned = function (ccg, wId = 3, ...) {
+assigned = function (ccg, wId = 1, ...) {
   rId = min(which(V(ccg$R)$g2.vId == wId))
   researchers = neighbors(ccg$R, rId)
   g.s = induced.subgraph(ccg$g1, researchers)
