@@ -6,6 +6,12 @@
 require(igraph)
 require(mosaic)
 trellis.par.set(theme = col.mosaic())
+library(devtools)
+load_all()
+
+
+####################################################
+
 n = 20
 p = 1/2
 g1 = erdos.renyi.game(n, p)

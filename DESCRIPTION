@@ -22,3 +22,4 @@ Collate:
     'ccgplot.R'
     'is.ccg.R'
     'set.mapping.R'
+    'assign.random.R'

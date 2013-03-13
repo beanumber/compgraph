@@ -2,7 +2,7 @@
 \alias{ccg.game}
 \title{ccg.game}
 \usage{
-  ccg.game(n1, p1, n2 = n1, ...)
+  ccg.game(n1, p1, n2 = n1, r = 0.5, ...)
 }
 \arguments{
   \item{n1}{Number of vertices in g1}

@@ -2,7 +2,7 @@
 \alias{set.mapping}
 \title{set.mapping}
 \usage{
-  set.mapping(G, type = "random", r = 0.5, ...)
+  set.mapping(ccg, type = "random", r = runif(1), ...)
 }
 \arguments{
   \item{G}{a composite graph object}

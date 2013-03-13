@@ -2,7 +2,7 @@
 \alias{assigned}
 \title{assigned}
 \usage{
-  assigned(ccg, wId = 3, ...)
+  assigned(ccg, wId = 1, ...)
 }
 \arguments{
   \item{ccg}{collaborative composite graph}

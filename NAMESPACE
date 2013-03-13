@@ -1,3 +1,4 @@
+export(assign.random)
 export(assigned)
 export(cbtime)
 export(ccg.game)
