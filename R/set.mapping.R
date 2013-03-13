@@ -18,35 +18,25 @@
 #' G = ccg.game(n, p)
 #' is.solvable(G, 3)
 #' 
-#' 
-set.mapping = function (ccg, type = "random", r=0.5, ...) {
+
+set.mapping = function (ccg, type="random", r=runif(1), ...) {
+  ccg = init.mapping(ccg)
+  if (type == "random") {
+    if (r<0 | r>1) {
+      r = runif(1)
+    }
+    nm = vcount(ccg$g1) * vcount(ccg$g2)
+    ccg = add.random.assignments(ccg, n = r * nm)
+  }
+  return(ccg)
+}
+
+init.mapping = function (ccg, ...) {
   # Create a bipartite graph for the mapping
   n1 = vcount(ccg$g1)
   n2 = vcount(ccg$g2)
   R.V = c(rep(0, n1), rep(1, n2))
-  
-  # Compute all the possible edges
-  possible.edges = expand.grid(vId = 1:n1, wId = (n1+1):(n1 + n2))
-  shuffled.edges = shuffle(possible.edges)
-  
-  # Now determine the edges in some way
-  if (type == "random") {
-    if(!is.null(r) && 0 <= r && r <= 1) {
-    } else {
-      r = 0.5
-      #      r = log(n1 + n2) / (n1 * n2)
-    }
-    edges = shuffled.edges[1:(n1 * n2 * r),]
-  }
-  if (type == "random-complete") {
-#    edges = 
-  }
-  if (type == "one-to-one") {
-  }
-  
-  R.E = as.vector(t(edges[,c("vId", "wId")]))
-  # R.E = as.vector(t(unique(cbind(g1.vIds, g2.vIds + n1))))
-  R = graph.bipartite(R.V, R.E)
+  R = graph.bipartite(R.V, NULL)
   
   # Keep track of which vertices are which
   V(R)$g1.vId = c(1:n1, rep(NA, n2))
@@ -56,15 +46,21 @@ set.mapping = function (ccg, type = "random", r=0.5, ...) {
 }
 
 add.random.assignments = function (ccg, n=1) {
-  V = get.data.frame(ccg$R, what="vertices")
-  vIds = which(V$type==FALSE)
-  wIds = which(V$type==TRUE)
+  n2 = sum(V(ccg$R)$type)
+  n1 = vcount(ccg$R) - n2
+  r.full = graph.full.bipartite(n1,n2)
+  r.comp = graph.difference(r.full, ccg$R)
+#  plot(r.comp, layout=layout.bipartite)
   
-  # Compute all the possible edges
-  possible.edges = expand.grid(vId = vIds, wId = wIds)
-  shuffled.edges = shuffle(possible.edges)
-  
-  ccg$R = add.edges(ccg$R, shuffled.edges[1:n,c("vId", "wId")])
-  ccg$R = simplify(ccg$R, remove.loops=TRUE, remove.multiple=TRUE)
+  # Find all possible edges that don't exist
+  E = get.data.frame(r.comp, what="edges")
+  if (n > nrow(E)) {
+    n = nrow(E)
+  }
+  if (n < 1) {
+    n = 1
+  }
+  edge.idx = sample(nrow(E), n)
+  ccg$R = ccg$R + edges(as.vector(t(E[edge.idx,])))
   return(ccg)
 }
