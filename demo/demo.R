@@ -25,7 +25,7 @@ plot(cg)
 
 # Composite Task Graph
 g = ccg.game(20, 0.5, r=0.1)
-ccgplot(g)
+plot(g)
 is.completed(g)
 
 
@@ -39,7 +39,7 @@ g2 = graph(edges = E.task, directed=TRUE)
 V(g2)$difficulty = c(7,5,2,1,1,2)
 
 g = compgraph(g1, g2, "SmallTask")
-ccgplot(g)
+plot(g)
 
 is.solvable(g, 1)
 is.completed(g, 1)
@@ -49,20 +49,33 @@ is.completed(g, 1)
 # With no restrictions, tasks are independent
 # so consider only a single task
 
-ccg = ccg.game(n1=10, p1=0.2, n2=1, r=0.9)
-ccgplot(ccg)
+ccg = ccg.game(n1=10, p1=0.2, n2=1, r=0.1)
+plot(ccg)
 
 ##############################################################
 
 require(manipulate)
-manipulate(ccgplot(ccg.game(n1 = n_s, p1 = p_s, n2 = n_t, r = r))
+manipulate(plot(ccg.game(n1 = n_s, p1 = p_s, n2 = n_t, r = r))
            , n_s = slider(1, 100, initial=25, label="Number of Researchers")
            , p_s = slider(0, 1, initial=0.25, label="Probability of Social Edge")
            , r = slider(0,1, initial=0.5, label="Assignment Percentage")
            , n_t = slider(1, 100, initial=1, label="Number of Tasks")
 )
 
+ccg = ccg.game(n1=10, p1=0.2, n2=1, r=0.1)
 
+manipulate( {
+  if (is.null(manipulatorGetState("myccg"))) {
+    manipulatorSetState("myccg", ccg)
+  } else {
+    ccg = manipulatorGetState("myccg")
+    ccg = add.random.assignments(ccg)
+    manipulatorSetState("myccg", ccg)
+  }
+  plot(ccg)
+}
+  , x = button(label="Add Random Assignment")
+)
 
 ##############################################################
 

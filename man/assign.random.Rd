@@ -27,6 +27,7 @@ ccg = ccg.game(n, p, n2=2)
 is.completed(ccg)
 ccg = assign.random(ccg)
 is.completed(ccg)
+Hey!
 }
 \author{
   Ben Baumer

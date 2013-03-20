@@ -1,12 +1,18 @@
-#' @title ccgplot
+#' @title plot.ccgraph
+#' @aliases ccgplot
 #' @description Plot a collaborative composite graph
 #' @details Plot a collaborative composite graph
 #' 
-#' @param ccg A composite graph object
+#' @param ccg A ccgraph object
 #' @param ... Parameters to be passed to plot.igraph for g1 and g2
 #' @export
 #' @examples
 #' plot(ercg(20, 0.5))
+#' 
+
+plot.ccgraph = function (ccg, ...) {
+  ccgplot(ccg)
+}
 
 ccgplot = function (ccg, ...) {
   if (!is.ccg(ccg)) {

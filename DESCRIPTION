@@ -23,3 +23,4 @@ Collate:
     'is.ccg.R'
     'set.mapping.R'
     'assign.random.R'
+    'ccgraph.R'

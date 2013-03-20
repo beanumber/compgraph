@@ -18,6 +18,7 @@
 #' is.completed(ccg)
 #' ccg = assign.random(ccg)
 #' is.completed(ccg)
+#' Hey!
 #' 
 
 assign.random = function (ccg, ...) {
@@ -28,4 +29,20 @@ assign.random = function (ccg, ...) {
     cat("\nAll tasks could not be completed")
   }
   return(ccg)
+}
+
+assign.greedy = function (ccg, implementation = "kz", ...) {
+  # Implement Greedy algorithm
+  if (implementation == "kz") {
+    assign.greedy.kz(ccg,...)
+  } else {
+    assign.greedy.mp(ccg,...)
+  }
+}
+
+assign.greedy.kz = function (ccg, ...) {
+  # Implement Greedy algorithm
+}
+assign.greedy.mp = function (ccg, ...) {
+  # Implement Greedy algorithm
 }

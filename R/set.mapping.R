@@ -28,6 +28,9 @@ set.mapping = function (ccg, type="random", r=runif(1), ...) {
     nm = vcount(ccg$g1) * vcount(ccg$g2)
     ccg = add.random.assignments(ccg, n = r * nm)
   }
+  if (type == "greedy") {
+    # Implement the Greedy algorithm
+  }
   return(ccg)
 }
 
@@ -46,14 +49,18 @@ init.mapping = function (ccg, ...) {
 }
 
 add.random.assignments = function (ccg, n=1) {
-  n2 = sum(V(ccg$R)$type)
-  n1 = vcount(ccg$R) - n2
+  n1 = vcount(ccg$g1)
+  n2 = vcount(ccg$g2)
   r.full = graph.full.bipartite(n1,n2)
   r.comp = graph.difference(r.full, ccg$R)
 #  plot(r.comp, layout=layout.bipartite)
   
   # Find all possible edges that don't exist
   E = get.data.frame(r.comp, what="edges")
+  if (nrow(E) == 0) {
+    warning("You have already made all possible assignments!")
+    return(ccg)
+  }
   if (n > nrow(E)) {
     n = nrow(E)
   }
