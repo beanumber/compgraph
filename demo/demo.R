@@ -5,6 +5,7 @@
 
 require(igraph)
 require(mosaic)
+library(manipulate)
 trellis.par.set(theme = col.mosaic())
 library(devtools)
 load_all()
@@ -43,6 +44,7 @@ plot(g)
 
 is.solvable(g, 1)
 is.completed(g, 1)
+is.completed(g, 1, ctype="linear")
 
 ##############################################################
 
@@ -62,19 +64,21 @@ manipulate(plot(ccg.game(n1 = n_s, p1 = p_s, n2 = n_t, r = r))
            , n_t = slider(1, 100, initial=1, label="Number of Tasks")
 )
 
-ccg = ccg.game(n1=10, p1=0.2, n2=1, r=0.1)
+ccg = ccg.game(n1=100, p1=0.2, n2=1, r=0.1)
 
 manipulate( {
   if (is.null(manipulatorGetState("myccg"))) {
     manipulatorSetState("myccg", ccg)
   } else {
     ccg = manipulatorGetState("myccg")
+    ccg$ctype = ctype
     ccg = add.random.assignments(ccg)
     manipulatorSetState("myccg", ccg)
   }
   plot(ccg)
 }
   , x = button(label="Add Random Assignment")
+  , ctype = picker("density", "linear", initial="density", label= "Collaboration Multiplier")
 )
 
 ##############################################################

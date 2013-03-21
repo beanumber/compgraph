@@ -19,11 +19,14 @@
 #' 
 #' 
 #' 
-ccgraph = function (cg, ...) UseMethod("ccgraph")
+ccgraph = function (cg, ctype = "density", ...) UseMethod("ccgraph")
 
-ccgraph.default = function (cg, ...) {
+ccgraph.default = function (cg, ctype = "density", ...) {
+  args = list(...)
+  cat(str(args))
   if (is.ccg(cg)) {
     class(cg) = c("ccgraph", class(cg))
+    cg$ctype = ctype
     return(cg)    
   } else {
     stop("This is not a ccgraph")

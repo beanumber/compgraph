@@ -11,7 +11,7 @@
 #' 
 
 plot.ccgraph = function (ccg, ...) {
-  ccgplot(ccg)
+  ccgplot(ccg, ...)
 }
 
 ccgplot = function (ccg, ...) {
@@ -54,6 +54,9 @@ ccgplot = function (ccg, ...) {
   if(!is.null(g1$layout)) { g1.layout = g1$layout } else { g1.layout = layout.kamada.kawai(g1) }
   if(!is.null(g2$layout)) { g2.layout = g2$layout } else { g2.layout = layout.fruchterman.reingold(g2) }
   
+#  args = list(...)
+#  cat(str(args))
+  
   # Is the CCNet completed?
   if (is.completed(ccg)) { 
     clab = "\nAlls Tasks are Completed" 
@@ -68,7 +71,8 @@ ccgplot = function (ccg, ...) {
        #       , vertex.label.cex = V(g1)$size / max(V(g1)$size)
        , vertex.label.family = "serif"
        , layout=g1.layout, edge.curved=TRUE
-       , xlab = paste("|V| =", vcount(g1), ", |E| =", ecount(g1), ", Edge Density =", round(edensity.g1, 3))
+       , xlab = paste("|V| =", vcount(g1), ", |E| =", ecount(g1), ", Edge Density =", round(edensity.g1, 3)
+                      , "\nCollective Expertise =", round(collaboration(g1, ctype = ccg$ctype), 2))
        #       , xlab = paste(xlab.rad, ", Diameter =", diameter(g2), ", Broadcast Time =", G$cbtime.max )
        , ...
   )
@@ -85,7 +89,8 @@ ccgplot = function (ccg, ...) {
        , vertex.label.family = "serif"
        , edge.arrow.size = 0.1
        , layout=g2.layout, edge.curved=TRUE
-       , xlab = paste("|V| =", vcount(g2), ", |E| =", ecount(g2), ", Diameter =", diameter(g2))
+       , xlab = paste("|V| =", vcount(g2), ", |E| =", ecount(g2), ", Diameter =", diameter(g2)
+                      , "\nMax Difficulty =", round(max(V(g2)$difficulty), 2))
        #    , xlab = paste("Diameter =", diameter(g2), ", Broadcast Time =", G$cbtime.max )
        , ...
   )

@@ -20,7 +20,7 @@
 #' 
 #' 
 is.completed = function (ccg, wId = 1, ...) {
-  if (!is.solvable(ccg, wId)) {
+  if (!is.solvable(ccg, wId, ...)) {
     return(FALSE)
   } else {
     children = neighbors(ccg$g2, wId)

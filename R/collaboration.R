@@ -18,12 +18,17 @@
 #' is.solvable(G, 3)
 #' 
 #' 
-collaboration = function (g, ...) {
+collaboration = function (g, ctype = "density", ...) {
   if (vcount(g) == 0) {
     return(0)
   } else if (vcount(g) == 1) {
     return(V(g)$expertise)
   } else {
-    return(sum(V(g)$expertise) * (1 + ecount(g) / choose(vcount(g), 2)))
+    if (ctype == "density") {
+      multiplier =  (1 + ecount(g) / choose(vcount(g), 2))
+    } else {
+      multiplier =  1
+    }
+    return(sum(V(g)$expertise) * multiplier)
   }
 }
