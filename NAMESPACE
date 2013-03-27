@@ -1,5 +1,6 @@
-export(assigned)
+export(add.random.assignments)
 export(assign.random)
+export(assigned)
 export(cbtime)
 export(ccg.game)
 export(ccgraph)

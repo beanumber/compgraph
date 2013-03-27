@@ -34,7 +34,9 @@ ccgplot = function (ccg, ...) {
   V(g1)$label = paste("v", 1:vcount(g1), sep="")
   
   V(g2)$size = 5 * V(g2)$difficulty
-  V(g2)$color = palette[eccentricity(g2) + 1]
+  complete = sapply(as.vector(V(g2)), is.completed, ccg = ccg)
+  solvable = sapply(as.vector(V(g2)), is.solvable, ccg = ccg)
+  V(g2)$color = ifelse(complete, "red", ifelse(solvable, "pink", "white"))
   V(g2)$label = paste("w", 1:vcount(g2), sep="")
   
   V(R)$size = c(V(g1)$size, V(g2)$size)
@@ -67,7 +69,7 @@ ccgplot = function (ccg, ...) {
   # Make the plot
   par(mfrow=c(1,3))
   
-  plot(g1, main=paste("G1 (Social Network)", g1$name)
+  plot(g1, main=paste("G1 (Social Network)\n", g1$name)
        #       , vertex.label.cex = V(g1)$size / max(V(g1)$size)
        , vertex.label.family = "serif"
        , layout=g1.layout, edge.curved=TRUE
@@ -77,19 +79,20 @@ ccgplot = function (ccg, ...) {
        , ...
   )
   
-  plot(R, main="R (Mapping)"
+  plot(R, main=paste("R (Assignments)\n", R$name)
        #       , vertex.label.cex = V(g1)$size / max(V(g1)$size)
        , vertex.label.family = "serif"
        , layout=layout.bipartite(R), edge.curved=TRUE
        , xlab = paste("Edge Density =", round(ecount(R) / prod(table(V(R)$type)), 3), clab)
   )
   
-  plot(g2, main=paste("G2 (Task Graph)", g2$name)
+  plot(g2, main=paste("G2 (Task Graph)\n", g2$name)
        #       , vertex.label.cex = V(g2)$size / max(V(g2)$size)
        , vertex.label.family = "serif"
        , edge.arrow.size = 0.1
        , layout=g2.layout, edge.curved=TRUE
        , xlab = paste("|V| =", vcount(g2), ", |E| =", ecount(g2), ", Diameter =", diameter(g2)
+                      , "\n", sum(complete), "complete, ", sum(solvable) - sum(complete), "solvable, ", vcount(g2) - sum(solvable), "remaining"
                       , "\nMax Difficulty =", round(max(V(g2)$difficulty), 2))
        #    , xlab = paste("Diameter =", diameter(g2), ", Broadcast Time =", G$cbtime.max )
        , ...

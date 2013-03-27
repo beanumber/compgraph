@@ -3,7 +3,7 @@
 \alias{ccgraph.default}
 \title{ccgraph}
 \usage{
-  ccgraph(cg, ...)
+  ccgraph(cg, ctype = "density", ...)
 }
 \arguments{
   \item{cg}{A compgraph object}

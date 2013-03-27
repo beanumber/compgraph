@@ -39,12 +39,16 @@ E.task = c(1,2, 1,3, 2,4, 3,5, 3,6)
 g2 = graph(edges = E.task, directed=TRUE)
 V(g2)$difficulty = c(7,5,2,1,1,2)
 
-g = compgraph(g1, g2, "SmallTask")
+g = ccgraph(compgraph(g1, g2, "SmallTask"))
 plot(g)
 
 is.solvable(g, 1)
 is.completed(g, 1)
 is.completed(g, 1, ctype="linear")
+
+
+g = ccg.game(n1 = 100, p1 = 0.2, n2 = 2, r = 0.2, "LargeTask")
+plot(g)
 
 ##############################################################
 
@@ -53,6 +57,8 @@ is.completed(g, 1, ctype="linear")
 
 ccg = ccg.game(n1=10, p1=0.2, n2=1, r=0.1)
 plot(ccg)
+
+ccg = add.random.assignments(ccg)
 
 ##############################################################
 
@@ -66,19 +72,38 @@ manipulate(plot(ccg.game(n1 = n_s, p1 = p_s, n2 = n_t, r = r))
 
 ccg = ccg.game(n1=100, p1=0.2, n2=1, r=0.1)
 
+
+require(manipulate)
+curr_ccg = ccg.game(n1=2, p1=0.2, n2=1, r=0.1)
+
+plot(curr_ccg)
+
+manipulate(plot(curr_ccg)
+           , r = slider(0,1, initial=0.5, label="Assignment Percentage"))
+)
+
+ccg = ccg.game(n1=10, p1=0.2, n2=1, r=0.1)
+
+
 manipulate( {
   if (is.null(manipulatorGetState("myccg"))) {
     manipulatorSetState("myccg", ccg)
   } else {
     ccg = manipulatorGetState("myccg")
     ccg$ctype = ctype
-    ccg = add.random.assignments(ccg)
+    if (x) {
+      ccg = add.random.assignments(ccg)
+    }    
+    if (y) {
+      ccg = add.greedy.assignments(ccg)
+    }
     manipulatorSetState("myccg", ccg)
   }
   plot(ccg)
 }
   , x = button(label="Add Random Assignment")
-  , ctype = picker("density", "linear", initial="density", label= "Collaboration Multiplier")
+  , y = button(label="Add Greedy Assignment")
+  , ctype = picker("social-density", "additive", initial="social-density", label= "Collaboration Multiplier")
 )
 
 ##############################################################

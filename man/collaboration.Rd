@@ -2,7 +2,7 @@
 \alias{collaboration}
 \title{collaboration}
 \usage{
-  collaboration(g, ...)
+  collaboration(g, ctype = "social-density", ...)
 }
 \arguments{
   \item{g}{an igraph object representing the social network

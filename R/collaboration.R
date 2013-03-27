@@ -18,13 +18,13 @@
 #' is.solvable(G, 3)
 #' 
 #' 
-collaboration = function (g, ctype = "density", ...) {
+collaboration = function (g, ctype = "social-density", ...) {
   if (vcount(g) == 0) {
     return(0)
   } else if (vcount(g) == 1) {
     return(V(g)$expertise)
   } else {
-    if (ctype == "density") {
+    if (ctype == "social-density") {
       multiplier =  (1 + ecount(g) / choose(vcount(g), 2))
     } else {
       multiplier =  1

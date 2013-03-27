@@ -21,9 +21,9 @@
 #' 
 ccgraph = function (cg, ctype = "density", ...) UseMethod("ccgraph")
 
-ccgraph.default = function (cg, ctype = "density", ...) {
-  args = list(...)
-  cat(str(args))
+ccgraph.default = function (cg, ctype = "social-density", ...) {
+#  args = list(...)
+#  cat(str(args))
   if (is.ccg(cg)) {
     class(cg) = c("ccgraph", class(cg))
     cg$ctype = ctype
