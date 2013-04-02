@@ -83,7 +83,7 @@ ccgplot = function (ccg, ...) {
        #       , vertex.label.cex = V(g1)$size / max(V(g1)$size)
        , vertex.label.family = "serif"
        , layout=layout.bipartite(R), edge.curved=TRUE
-       , xlab = paste("Edge Density =", round(ecount(R) / prod(table(V(R)$type)), 3), clab)
+       , xlab = paste("|E| =", ecount(R), ", Edge Density =", round(ecount(R) / prod(table(V(R)$type)), 3), clab)
   )
   
   plot(g2, main=paste("G2 (Task Graph)\n", g2$name)
