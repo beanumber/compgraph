@@ -44,8 +44,7 @@ plot(g)
 
 is.solvable(g, 1)
 is.completed(g, 1)
-is.completed(g, 1, ctype="linear")
-
+is.completed(g, 1, ctype="additive")
 
 g = ccg.game(n1 = 100, p1 = 0.2, n2 = 2, r = 0.2, "LargeTask")
 plot(g)
@@ -58,9 +57,34 @@ plot(g)
 ccg = ccg.game(n1=10, p1=0.2, n2=1, r=0.1)
 plot(ccg)
 
-ccg = add.random.assignments(ccg)
+ccg = add.assignments(ccg)
 
 ##############################################################
+
+# Greedy is not better than 3/2
+g1 = graph(edges = c(2,3), directed=FALSE)
+V(g1)$expertise = c(2,1,1)
+
+g2 = graph(NULL, n=1, directed=TRUE)
+V(g2)$difficulty = c(4)
+
+ccg1 = ccgraph(compgraph(g1, g2, name="Greedy", r=0))
+plot(ccg1)
+
+# OPT = Add assignments for the two weaker workers
+ccg1$R = ccg1$R + edges(c(2,4,3,4))
+plot(ccg1)
+
+# Note that the task is now incomplete using the additive function
+ccg1$ctype = "additive"
+plot(ccg1)
+
+ccg1$ctype = "multiplicative"
+plot(ccg1)
+ccg1 = add.assignments(ccg1)
+plot(ccg1)
+
+#############################################################
 
 require(manipulate)
 manipulate(plot(ccg.game(n1 = n_s, p1 = p_s, n2 = n_t, r = r))
@@ -82,7 +106,7 @@ manipulate(plot(curr_ccg)
            , r = slider(0,1, initial=0.5, label="Assignment Percentage"))
 )
 
-ccg = ccg.game(n1=10, p1=0.2, n2=1, r=0.1)
+ccg = ccg.game(n1=10, p1=0.2, n2=10, r=0.1)
 
 
 manipulate( {
@@ -92,10 +116,10 @@ manipulate( {
     ccg = manipulatorGetState("myccg")
     ccg$ctype = ctype
     if (x) {
-      ccg = add.random.assignments(ccg)
+      ccg = add.assignments(ccg, alg="random", blind=blind)
     }    
     if (y) {
-      ccg = add.greedy.assignments(ccg)
+      ccg = add.assignments(ccg, alg="greedy", blind=blind)
     }
     manipulatorSetState("myccg", ccg)
   }
@@ -103,8 +127,14 @@ manipulate( {
 }
   , x = button(label="Add Random Assignment")
   , y = button(label="Add Greedy Assignment")
+  , blind = checkbox(TRUE, label="Make Assignments Blindly?")
   , ctype = picker("social-density", "additive", initial="social-density", label= "Collaboration Multiplier")
 )
+
+##############################################################
+
+# Shiny
+runApp("inst/algorithms")
 
 ##############################################################
 

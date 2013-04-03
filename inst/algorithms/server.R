@@ -4,8 +4,16 @@ require(igraph)
 require(mosaic)
 
 # hard-coded examples
-ccg1 = ccg.game(n1 = 10, p1 = 0.5, n2 = 2, r = 0.2)
 ccg2 = ccg.game(n1 = 20, p1 = 0.2, n2 = 1, r = 0.2)
+
+# Greedy is not better than 3/2
+g1 = graph(edges = c(2,3), directed=FALSE)
+V(g1)$expertise = c(2,1,1)
+
+g2 = graph(NULL, n=1, directed=TRUE)
+V(g2)$difficulty = c(4)
+
+ccg1 = ccgraph(compgraph(g1, g2, name="Greedy", r=0))
 
 # Define server logic required to generate and plot a random distribution
 shinyServer(function(input, output) {
@@ -21,16 +29,14 @@ shinyServer(function(input, output) {
        ccg <<- switch(input$ccg
                          , example1 = ccg1
                          , example2 = ccg2
-              , random = ccg.game(n1 = input$n_s, p1 = input$p_s, n2 = input$n_t, r = input$r)
+              , random = ccg.game(n1 = input$n_s, p1 = input$p_s, n2 = input$n_t, r = input$r, capacity = input$capacity)
        )
        break;
 #     } else {
      }
      cat(input$edges)
-        ccg <<- switch(input$alg
-            , random = add.random.assignments(ccg)
-            , greedy = add.greedy.assignments(ccg)                      
-        )
+     ccg$ctype <<- input$ctype
+        ccg <<- add.assignments(ccg, input$alg, blind=input$blind)
 #    }
     return(ccg)
   })

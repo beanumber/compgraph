@@ -6,6 +6,7 @@
 #' @author Ben Baumer
 #' 
 #' @param g an igraph object representing the social network of the researchers
+#' @param ctype the type of collaboration function to be applied
 #' @param ... Arguments to be passed to compgraph
 #' 
 #' @return TRUE or FALSE
@@ -14,8 +15,8 @@
 #' @examples
 #' n = 20
 #' p = 1/2
-#' G = ccg.game(n, p)
-#' is.solvable(G, 3)
+#' cg = ccg.game(n, p)
+#' collaboration(cg$g1)
 #' 
 #' 
 collaboration = function (g, ctype = "social-density", ...) {
@@ -24,11 +25,12 @@ collaboration = function (g, ctype = "social-density", ...) {
   } else if (vcount(g) == 1) {
     return(V(g)$expertise)
   } else {
-    if (ctype == "social-density") {
-      multiplier =  (1 + ecount(g) / choose(vcount(g), 2))
-    } else {
-      multiplier =  1
-    }
-    return(sum(V(g)$expertise) * multiplier)
+    c = switch(ctype
+        , "multiplicative" = sum(V(g)$expertise * (degree(g)/2 + 1))
+        , "social-density" = sum(V(g)$expertise) * (1 + ecount(g) / choose(vcount(g), 2))
+        , "additive" = sum(V(g)$expertise)
+        , sum(V(g)$expertise) 
+    )
+    return(c)
   }
 }

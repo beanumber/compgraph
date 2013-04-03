@@ -20,7 +20,7 @@
 #' G = ccg.game(n, p)
 #' 
 #' 
-ccg.game = function (n1, p1, n2 = n1, r = 0.5, ...) {
+ccg.game = function (n1, p1, n2 = n1, r = 0.5, capacity = 10, ...) {
   # Check for valid entries for the probability of an edge
   if(p1 <= 0 | p1 > 1) { 
     p1 = 1/n1
@@ -31,6 +31,7 @@ ccg.game = function (n1, p1, n2 = n1, r = 0.5, ...) {
     # with mean 2
     lambda.s = 1/2
     V(g1)$expertise = rexp(vcount(g1), rate=lambda.s)
+    V(g1)$capacity = capacity
     if (n2 == 1) {
       g2 = graph.empty(1)   # a single node
     } else {
@@ -38,7 +39,8 @@ ccg.game = function (n1, p1, n2 = n1, r = 0.5, ...) {
     }
     # Draw the difficulty from an exponential distribution as well
     # Set lambda.t = lambda.s / (r * n.s * (1-p.s))
-    V(g2)$difficulty = rexp(vcount(g2), rate = (lambda.s / ((1 + p1) * r * vcount(g1))))  
+    lambda.t = lambda.s / ((1 + p1) * r * vcount(g1))
+    V(g2)$difficulty = rexp(vcount(g2), rate = lambda.t)  
     ccg = compgraph(g1, g2, r=r, ...)
     return(ccgraph(ccg, ...)) 
   }

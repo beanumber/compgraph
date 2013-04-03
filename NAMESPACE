@@ -1,4 +1,4 @@
-export(add.random.assignments)
+export(add.assignments)
 export(assigned)
 export(assign.random)
 export(cbtime)

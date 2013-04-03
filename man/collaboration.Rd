@@ -8,6 +8,9 @@
   \item{g}{an igraph object representing the social network
   of the researchers}
 
+  \item{ctype}{the type of collaboration function to be
+  applied}
+
   \item{...}{Arguments to be passed to compgraph}
 }
 \value{
@@ -24,8 +27,8 @@
 \examples{
 n = 20
 p = 1/2
-G = ccg.game(n, p)
-is.solvable(G, 3)
+cg = ccg.game(n, p)
+collaboration(cg$g1)
 }
 \author{
   Ben Baumer

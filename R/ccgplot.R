@@ -25,12 +25,13 @@ ccgplot = function (ccg, ...) {
   R = ccg$R
   
   
-  numColors = max(c(degree(g1) + 1, degree(g2) + 1))
+  numColors = vcount(g1)
   palette = rainbow(numColors)
   
   # Set vertex attributes
   V(g1)$size = 5 * V(g1)$expertise
-  V(g1)$color = palette[degree(g1) + 1]
+#  V(g1)$color = palette[degree(g1) + 1]
+  V(g1)$color = palette[degree(R)[1:vcount(g1)] + 1]
   V(g1)$label = paste("v", 1:vcount(g1), sep="")
   
   V(g2)$size = 5 * V(g2)$difficulty
@@ -108,7 +109,8 @@ layout.bipartite = function (g) {
     x = V(g)$type * 2
     n2 = sum(V(g)$type)
     n1 = vcount(g) - n2
-    y = c(1:n1, 1:n2)
+    max.height = max(n1, n2)
+    y = c(1:n1 * (max.height/n1), 1:n2 * (max.height/n2)) 
     return(cbind(x,y))
   }
 }
