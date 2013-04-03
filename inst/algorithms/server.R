@@ -1,7 +1,11 @@
 library(shiny)
 require(compgraph)
+# require(compgraph, lib.loc="/Users/bbaumer/R/library")
 require(igraph)
-require(mosaic)
+# require(igraph, lib.loc="/Users/bbaumer/R/library")
+# Why are these necessary?
+# source("R/compgraph.R")
+# source("R/ccgraph.R")
 
 # hard-coded examples
 ccg2 = ccg.game(n1 = 20, p1 = 0.2, n2 = 1, r = 0.2)
