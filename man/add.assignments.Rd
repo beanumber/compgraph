@@ -2,7 +2,8 @@
 \alias{add.assignments}
 \title{add.assignments}
 \usage{
-  add.assignments(ccg, alg = "random", blind = TRUE, n = 1)
+  add.assignments(ccg, alg = "random", blind = FALSE,
+    n = 1)
 }
 \arguments{
   \item{ccg}{a ccgraph object}

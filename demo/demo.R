@@ -106,7 +106,9 @@ manipulate(plot(curr_ccg)
            , r = slider(0,1, initial=0.5, label="Assignment Percentage"))
 )
 
-ccg = ccg.game(n1=10, p1=0.2, n2=10, r=0.1)
+ccg = ccg.game(n1=7, p1=0.2, r=0.1)
+plot(ccg)
+opt(ccg)
 
 
 manipulate( {
@@ -201,7 +203,7 @@ xyplot(jitter(is.completed) ~ jitter(r), groups=p_s, data=res
        , alpha=0.5, type=c("p", "smooth"), lwd=3
        , auto.key=list(columns=5), xlab="Density of Mapping (%)"
        , ylab = "Probability that the Task is Completed"
-       , sub = paste("Numnber of Trials =", nrow(res), "| Number of Researchers =", max(res$n_s), "| Number of Tasks =", max(res$n_t)))
+       , sub = paste("Number of Trials =", nrow(res), "| Number of Researchers =", max(res$n_s), "| Number of Tasks =", max(res$n_t)))
 favstats(is.completed ~ r, data=res)
 # plotFun((1 + 0.2) * x ~ x, add=TRUE)
 # plotFun(x^(1/10) ~ x, add=TRUE)

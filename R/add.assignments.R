@@ -20,12 +20,12 @@
 #' plot(add.assignments(ccg))
 #' 
 
-add.assignments = function (ccg, alg="random", blind=TRUE, n=1) {
+add.assignments = function (ccg, alg="random", blind=FALSE, n=1) {
   if (n < 1) {
     warning("No assignments to make")
     return(ccg)
   }
-  E = find.potential.assignments(ccg)
+  E = find.potential.assignments(ccg, blind)
   if (nrow(E) == 0) {
     warning("You have already made all possible assignments!")
     return(ccg)
@@ -35,17 +35,14 @@ add.assignments = function (ccg, alg="random", blind=TRUE, n=1) {
   if (alg == "random") {
     E$score = runif(nrow(E))
   }
-  if (alg == "greedy") {
+  if (alg == "greedy-dumb") {
     E$score = V(ccg$g1)$expertise[E$from]
   }
   if (alg == "greedy-smart") {
     E$score = V(ccg$g1)$expertise[E$from] * V(ccg$g2)$difficulty[E$to - vcount(ccg$g1)]
   }
-  
-  # Are we allowed to know which tasks are complete?
-  if (!blind) {
-    E$solvable = sapply(as.numeric(E$to) - vcount(ccg$g1), is.solvable, ccg=ccg)
-    E = subset(E, solvable == FALSE)
+  if (alg == "greedy") {
+    E$score = apply(as.matrix(E[,1:2]), 1, collaboration.update, ccg=ccg)
   }
   
   queue = E[order(E$score, decreasing=TRUE),]
@@ -63,7 +60,7 @@ add.assignments = function (ccg, alg="random", blind=TRUE, n=1) {
   return(ccg)
 }
 
-find.potential.assignments = function (ccg) {
+find.potential.assignments = function (ccg, blind = FALSE,...) {
   n1 = vcount(ccg$g1)
   n2 = vcount(ccg$g2)
   r.full = graph.full.bipartite(n1,n2)
@@ -76,5 +73,21 @@ find.potential.assignments = function (ccg) {
   # Remove the edges from researchers that have already reached their capacity
   tapped.out = which(degree(ccg$R)[1:n1] >= V(ccg$g1)$capacity)
   E = subset(E, !from %in% tapped.out)
+  
+  # Are we allowed to know which tasks are complete?
+  if (!blind) {
+    # Restrict the edges to only those tasks that are unsolved  
+    solvable = sapply(1:vcount(ccg$g2), is.solvable, ccg=ccg)
+    E = transform(E, solvable = solvable[E$to - vcount(ccg$g1)])
+    E = subset(E, solvable == FALSE)
+  }
   return(E)
+}
+
+collaboration.update = function(ccg, e) {
+  wId = e[2] - vcount(ccg$g1)
+  c0 = collaboration(assigned(ccg, wId), ctype=ccg$ctype)
+  ccg$R = ccg$R + edges(e)
+  c1 = collaboration(assigned(ccg, wId), ctype=ccg$ctype)
+  return(c1 - c0)
 }
