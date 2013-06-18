@@ -20,13 +20,26 @@
 #' 
 
 ccnpk = function (ccg, alg = "greedy", ...) {
+  
+  E = find.potential.assignments(ccg)
+  
+  if (nrow(E) == 0) {
+    warning("You have already made all possible assignments!")
+    return(ccg)
+  }
+  
+  if (is.null(brute.force(ccg, E, nrow(E)))) {
+    cat("\nThis task is unsolvable!")
+    return(ccg)
+  }
+  
   if (alg == "opt") {
     opt = ccnpk.opt(ccg)
     # Add the edges
     ccg$R = ccg$R + edges(as.vector(t(opt[,1:2])))
     return(ccg)
   }
-  while(!is.completed(ccg) & ecount(ccg$R) < vcount(ccg$g1) * vcount(ccg$g2)) {
+  while(!is.completed(ccg) & nrow(find.potential.assignments(ccg)) > 0) {
     ccg = add.assignments(ccg, alg=alg)
   }
   return(ccg)

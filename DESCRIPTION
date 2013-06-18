@@ -26,5 +26,4 @@ Collate:
     'ccgraph.R'
     'add.assignments.R'
     'ccnpk.R'
-    'ccnpk.greedy.R'
     'ccnpk.opt.R'
