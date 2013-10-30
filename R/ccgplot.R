@@ -5,16 +5,13 @@
 #' 
 #' @param ccg A ccgraph object
 #' @param ... Parameters to be passed to plot.igraph for g1 and g2
+#' 
 #' @export
 #' @examples
 #' plot(ercg(20, 0.5))
 #' 
 
 plot.ccgraph = function (ccg, ...) {
-  ccgplot(ccg, ...)
-}
-
-ccgplot = function (ccg, ...) {
   if (!is.ccg(ccg)) {
     cat("\nThis is not a valid CCG")
     return(FALSE)

@@ -28,3 +28,4 @@ Collate:
     'ccnpk.R'
     'ccnpk.opt.R'
     'testing.R'
+    'ccnpk.lp.R'
