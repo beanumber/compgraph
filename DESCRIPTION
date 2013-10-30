@@ -27,3 +27,4 @@ Collate:
     'add.assignments.R'
     'ccnpk.R'
     'ccnpk.opt.R'
+    'testing.R'

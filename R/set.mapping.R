@@ -1,4 +1,5 @@
 #' @title set.mapping
+#' @aliases init.mapping
 #' 
 #' @description Set the relation R between the two graphs
 #' 
@@ -12,6 +13,7 @@
 #' @return TRUE or FALSE
 #' 
 #' @export
+#' @export init.mapping
 #' @examples
 #' n = 20
 #' p = 1/2

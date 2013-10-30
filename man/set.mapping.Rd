@@ -1,4 +1,5 @@
 \name{set.mapping}
+\alias{init.mapping}
 \alias{set.mapping}
 \title{set.mapping}
 \usage{

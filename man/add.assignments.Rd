@@ -1,5 +1,6 @@
 \name{add.assignments}
 \alias{add.assignments}
+\alias{find.potential.assignments}
 \title{add.assignments}
 \usage{
   add.assignments(ccg, alg = "random", blind = FALSE,

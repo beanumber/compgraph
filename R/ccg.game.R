@@ -11,7 +11,7 @@
 #' @param n2 Number of vertices in g2. Default value is n1.
 #' @param ... Arguments to be passed to compgraph
 #' 
-#' @return A compgraph object
+#' @return A ccgraph object
 #' 
 #' @export
 #' @examples
@@ -27,6 +27,7 @@ ccg.game = function (n1, p1, n2 = n1, r = 0.5, capacity = 10, ...) {
     p2 = p1
   } else {
     g1 = erdos.renyi.game(n1, p1)
+#    g1 = graph.ring(n1)
     # Draw the researcher's expertise from an exponential distribution
     # with mean 2
     lambda.s = 1/2
@@ -41,6 +42,7 @@ ccg.game = function (n1, p1, n2 = n1, r = 0.5, capacity = 10, ...) {
     # Set lambda.t = lambda.s / (r * n.s * (1-p.s))
     lambda.t = lambda.s / ((1 + p1) * r * vcount(g1))
     V(g2)$difficulty = rexp(vcount(g2), rate = lambda.t)  
+    V(g2)$need = V(g2)$difficulty
     ccg = compgraph(g1, g2, r=r, ...)
     return(ccgraph(ccg, ...)) 
   }

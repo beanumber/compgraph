@@ -11,7 +11,13 @@
 #' 
 #' @return A ccgraph object, or an error
 #' 
+
+#' @examples showClass("GameDayPlays")
+
+#' @exportClass ccgraph
 #' @export
+#' @export ccgraph.default
+#' 
 #' @examples
 #' # Create a ccgraph
 #' ccg = ccg.game(10, 0.5, 2, r=0.5, name="myCCG")
@@ -19,6 +25,10 @@
 #' 
 #' 
 #' 
+#' 
+
+setClass("ccgraph", contains = "compgraph")
+
 ccgraph = function (cg, ctype = "density", ...) UseMethod("ccgraph")
 
 ccgraph.default = function (cg, ctype = "social-density", ...) {

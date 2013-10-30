@@ -14,7 +14,7 @@
   \item{...}{Arguments to be passed to compgraph}
 }
 \value{
-  A compgraph object
+  A ccgraph object
 }
 \description{
   Generate a random collaborative composite graph

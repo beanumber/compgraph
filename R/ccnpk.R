@@ -20,7 +20,7 @@
 #' 
 
 ccnpk = function (ccg, alg = "greedy", ...) {
-  
+  message(paste("Implementing algorithm:", alg))
   E = find.potential.assignments(ccg)
   
   if (nrow(E) == 0) {
@@ -28,10 +28,13 @@ ccnpk = function (ccg, alg = "greedy", ...) {
     return(ccg)
   }
   
-  if (is.null(brute.force(ccg, E, nrow(E)))) {
-    cat("\nThis task is unsolvable!")
-    return(ccg)
-  }
+  # Can't do this in the presence of capacities
+#  if (is.null(brute.force(ccg, E, nrow(E)))) {
+#    cat("\nThis task is unsolvable!")
+#    return(ccg)
+#  } else {
+#    cat("\nThis task is solvable...proceeding...")
+#  }
   
   if (alg == "opt") {
     opt = ccnpk.opt(ccg)
@@ -39,8 +42,14 @@ ccnpk = function (ccg, alg = "greedy", ...) {
     ccg$R = ccg$R + edges(as.vector(t(opt[,1:2])))
     return(ccg)
   }
-  while(!is.completed(ccg) & nrow(find.potential.assignments(ccg)) > 0) {
+  
+  # 
+  R.now = ecount(ccg$R)
+  R.new = R.now + 1
+  while(!is.completed(ccg) & R.new > R.now) {
+    R.now = ecount(ccg$R)
     ccg = add.assignments(ccg, alg=alg)
+    R.new = ecount(ccg$R)
   }
   return(ccg)
 }

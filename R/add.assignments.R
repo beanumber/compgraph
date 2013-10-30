@@ -1,4 +1,5 @@
 #' @title add.assignments
+#' @aliases find.potential.assignments
 #' 
 #' @description Adds assignments of researchers to tasks
 #' 
@@ -13,6 +14,8 @@
 #' @return a ccgraph object
 #' 
 #' @export
+#' @export find.potential.assignments
+#' 
 #' @examples
 #' n = 20
 #' p = 1/2
@@ -80,7 +83,7 @@ find.potential.assignments = function (ccg, blind = FALSE,...) {
     solvable = sapply(1:vcount(ccg$g2), is.solvable, ccg=ccg)
     E = transform(E, solvable = solvable[E$to - vcount(ccg$g1)])
     E = subset(E, solvable == FALSE)
-  }
+  }  
   return(E)
 }
 

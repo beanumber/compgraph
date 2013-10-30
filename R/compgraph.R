@@ -19,7 +19,9 @@
 #' \item{D2.geodesic}{A matrix of the geodesic distances in g2}
 #' \item{T}{A minimum spanning tree for g1}
 #' 
+#' @exportClass compgraph
 #' @export
+#' @export compgraph.default
 #' @examples
 #' # Create a compgraph
 #' cg = compgraph (g1, g2, name="myCompGraph")
@@ -27,6 +29,9 @@
 #' 
 #' 
 #' 
+#' 
+setClass("compgraph")
+
 compgraph = function (g1, g2, name = "G", ...) UseMethod("compgraph")
 
 compgraph.default = function (g1, g2, name = "G", ...) {
