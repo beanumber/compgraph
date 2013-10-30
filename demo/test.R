@@ -34,6 +34,10 @@ sapply(resample(100:max.n, size=m), do.it, numTrials = 10)
 
 #####################################################
 
+system("cat data/ccnpk*.csv > data/ds.csv")
+
+####################################################
+
 # Each row corresponds to one randomly generated ccg
 ds = read.csv("data/ds.csv")
 dim(ds)
@@ -41,12 +45,12 @@ dim(ds)
 # Some false positives on both sides??
 tally(complete.random ~ complete.greedy, data=ds)
 
-ds.long = reshape(ds, varying=8:11, v.names="numEdges"
-        , timevar = "alg", times = names(ds)[8:11], direction="long")
-ds.long2 = reshape(ds, varying=12:15, v.names="isCompleted"
-                   , timevar = "alg", times = names(ds)[8:11], direction="long")
-ds.long3 = reshape(ds, varying=16:19, v.names="time"
-                  , timevar = "alg", times = names(ds)[8:11], direction="long")
+ds.long = reshape(ds, varying=8:12, v.names="numEdges"
+        , timevar = "alg", times = names(ds)[8:12], direction="long")
+ds.long2 = reshape(ds, varying=13:17, v.names="isCompleted"
+                   , timevar = "alg", times = names(ds)[8:12], direction="long")
+ds.long3 = reshape(ds, varying=18:22, v.names="time"
+                  , timevar = "alg", times = names(ds)[8:12], direction="long")
 ds.final = cbind(ds.long, isCompleted = ds.long2$isCompleted, time = ds.long3$time)
 ds.final$alg = factor(ds.final$alg)
 
@@ -66,7 +70,7 @@ trellis.par.set(name="superpose.symbol", value=ss)
 
 # Figure 1 - Quality of Algorithms
 # pdf("~/Dropbox/Academic/E1-composite/CCNets/figs/quality.pdf", width=10, height=8)
-xyplot(I(numEdges + 1) ~ jitter(size) | as.factor(isCompleted), groups=alg
+xyplot(I(numEdges + 1) ~ jitter(size) | isCompleted, groups=alg
        , data=ds.plot, type=c("smooth")
 #       , scales=list(x = list(log = 2), y=list(log=2))
 #       , par.settings = list("superpose.symbol" = ss)
@@ -76,7 +80,7 @@ xyplot(I(numEdges + 1) ~ jitter(size) | as.factor(isCompleted), groups=alg
        , ylab="Number of Edges Added"
        , alpha = 0.5, lwd = 3, lty=1, pch = 1
        , strip = strip.custom(style = 1, factor.levels = c("All Tasks Not Completed", "All Tasks Complete"))
-       , auto.key=list(columns=4))
+       , auto.key=list(columns=5))
 panel.text(2^8, 2^7, "All algorithms make the same\nnumber of assignments if they fail", cex=0.8)
 # dev.off()
 
