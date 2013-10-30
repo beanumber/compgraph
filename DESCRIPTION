@@ -8,7 +8,9 @@ Maintainer: Ben Baumer <bbaumer@smith.edu>
 Description: More about what it does (maybe more than one line)
 License: What license is it under?
 Imports:
-    igraph
+    igraph,
+    mosaic,
+    linprog
 Collate:
     'compgraph.R'
     'cstretch.R'

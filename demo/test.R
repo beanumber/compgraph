@@ -1,9 +1,4 @@
-require(igraph)
-require(mosaic)
-library(manipulate)
-library(devtools)
-load_all()
-
+require(compgraph)
 
 ####################################################
 
