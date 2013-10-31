@@ -27,9 +27,9 @@ alg.test.many(8, numTrials)
 
 ########## RUN THIS!!!! #############################
 
-max.n = 200
-m = 20
-sapply(resample(100:max.n, size=m), do.it, numTrials = 10)
+max.n = 25
+m = 100
+sapply(resample(10:max.n, size=m), alg.test.many, numTrials = 10)
 
 
 #####################################################
@@ -71,7 +71,7 @@ trellis.par.set(name="superpose.symbol", value=ss)
 # Figure 1 - Quality of Algorithms
 # pdf("~/Dropbox/Academic/E1-composite/CCNets/figs/quality.pdf", width=10, height=8)
 xyplot(I(numEdges + 1) ~ jitter(size) | isCompleted, groups=alg
-       , data=ds.plot, type=c("smooth")
+       , data=ds.plot, type=c("p", "smooth")
 #       , scales=list(x = list(log = 2), y=list(log=2))
 #       , par.settings = list("superpose.symbol" = ss)
        , main="Comparison of Quality of Algorithms"
